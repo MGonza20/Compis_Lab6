@@ -60,7 +60,7 @@ class Parser:
                 if line and line[0] == '%token' and i_line > separator[0]:
                     errors.append(('Error en la linea ' + str(i_line) + ':\nNo es valido declarar tokens luego del separador %%', i_line))
 
-        self.set_values()
+        # self.set_values()
         non_terminals = self.get_non_terminal()
 
         for indx, line in enumerate(splits, start=1):
@@ -315,6 +315,47 @@ class Parser:
                     groups[no].transitions['$'] = 'aceptar'
 
         return groups
+    
+
+            
+    def construct_slr_table(self, automata):
+        table = {}
+        all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
+        non_terminal = self.get_non_terminal()
+
+        for no, state in automata.items():
+            table[no] = {}
+            for transition, final_dest in state.transitions.items():
+                
+                # Assigning accept
+                if transition == '$' and final_dest == 'aceptar':
+                    table[no]['$'] = 'acc'
+
+                # Assigning shift
+                if transition not in non_terminal:
+                    table[no][transition] = f's{final_dest}'
+
+                # Assigning reduce
+                for h in state.heart:
+                    if h.production[-1] == '•':
+                        # Condition to not assign reduce to the augmented production
+                        if h.name != f"{self.productions[0].name}'":
+
+                            if h.name == self.productions[0].name:
+                                follow_res = self.follow(h.name, init=True)
+                            else:
+                                follow_res = self.follow(h.name)
+
+                            for f in follow_res:
+                                no_dot = h.production.copy()
+                                no_dot.pop()                 
+                                complete_prod = [h.name] + no_dot               
+                                table[no][f] = f'r{all_prods.index(complete_prod) +1}'
+                                
+
+
+        return table
+
 
                                      
     def draw_automata_p(self, automata):
@@ -347,7 +388,7 @@ class Parser:
                     <TR><TD>{0}</TD></TR>
                     <TR><TD BGCOLOR="lightgrey">{1}</TD></TR>  
                 </TABLE>>'''.format(attrs['h_list'], attrs['p_list']), shape='none')
-        dot.render('x/automata_x', format='png')
+        dot.render('x/automata_xx', format='png')
 
 
     def first(self, element):
@@ -453,9 +494,10 @@ if __name__ == "__main__":
     err = parser.analyze_yapar()
     parser.set_values()
     wut = parser.construct_automata()
-    parser.draw_automata_p(wut)
-    wut = parser.all_first()
-    wut2 = parser.all_follows()
+    parser.construct_slr_table(wut)
+    # parser.draw_automata_p(wut)
+    # wut = parser.all_first()
+    # wut2 = parser.all_follows()
     a = 1
 
 
