@@ -246,14 +246,16 @@ class Parser:
 
 
     def get_group_transitions(self, group):
-        transitions = set()
+        transitions = []
         all_productions = [prod for prod in group.productions] + [prod for prod in group.heart]
         
         for p in all_productions:
             dot_index = p.production.index('•')
             if dot_index + 1 < len(p.production):
                 element_after_dot = p.production[dot_index + 1]
-                transitions.add(element_after_dot)
+                if element_after_dot not in transitions:
+                    transitions.append(element_after_dot)
+                # transitions.add(element_after_dot)
 
         return list(transitions)
 
