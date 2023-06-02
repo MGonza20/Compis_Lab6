@@ -332,25 +332,27 @@ class Parser:
                     table[no]['$'] = 'acc'
 
                 # Assigning shift
-                if transition not in non_terminal:
+                elif transition not in non_terminal:
                     table[no][transition] = f's{final_dest}'
 
-                # Assigning reduce
-                for h in state.heart:
-                    if h.production[-1] == '•':
-                        # Condition to not assign reduce to the augmented production
-                        if h.name != f"{self.productions[0].name}'":
+        for no, state in automata.items():
+            # Assigning reduce
+            for h in state.heart:
+                if h.production[-1] == '•':
+                    # Condition to not assign reduce to the augmented production
+                    augmented_prod = f"{self.productions[0].name}'"
+                    if h.name != f"{self.productions[0].name}'":
 
-                            if h.name == self.productions[0].name:
-                                follow_res = self.follow(h.name, init=True)
-                            else:
-                                follow_res = self.follow(h.name)
+                        if h.name == self.productions[0].name:
+                            follow_res = self.follow(h.name, init=True)
+                        else:
+                            follow_res = self.follow(h.name)
 
-                            for f in follow_res:
-                                no_dot = h.production.copy()
-                                no_dot.pop()                 
-                                complete_prod = [h.name] + no_dot               
-                                table[no][f] = f'r{all_prods.index(complete_prod) +1}'
+                        for f in follow_res:
+                            no_dot = h.production.copy()
+                            no_dot.pop()                 
+                            complete_prod = [h.name] + no_dot               
+                            table[no][f] = f'r{all_prods.index(complete_prod) +1}'
                                 
 
 
