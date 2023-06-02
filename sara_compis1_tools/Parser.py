@@ -200,7 +200,7 @@ class Parser:
 
 
     def closure(self, heart_prductions):
-        non_terminal_names = self.get_non_terminal()
+        non_terminal_names = list(set(prod.name for prod in self.productions))
 
         new_group = group_i()
         for heart_production in heart_prductions:
@@ -246,15 +246,14 @@ class Parser:
 
 
     def get_group_transitions(self, group):
-        transitions = []
+        transitions = set()
         all_productions = [prod for prod in group.productions] + [prod for prod in group.heart]
         
         for p in all_productions:
             dot_index = p.production.index('•')
             if dot_index + 1 < len(p.production):
                 element_after_dot = p.production[dot_index + 1]
-                if not element_after_dot in transitions:
-                    transitions.append(element_after_dot)
+                transitions.add(element_after_dot)
 
         return list(transitions)
 
@@ -328,13 +327,13 @@ class Parser:
             table[no] = {}
             for transition, final_dest in state.transitions.items():
                 
-                # # Assigning accept
-                # if transition == '$' and final_dest == 'aceptar':
-                #     table[no]['$'] = 'acc'
+                # Assigning accept
+                if transition == '$' and final_dest == 'aceptar':
+                    table[no]['$'] = 'acc'
 
-                # # Assigning shift
-                # if transition not in non_terminal:
-                #     table[no][transition] = f's{final_dest}'
+                # Assigning shift
+                if transition not in non_terminal:
+                    table[no][transition] = f's{final_dest}'
 
                 # Assigning reduce
                 for h in state.heart:
@@ -393,20 +392,20 @@ class Parser:
 
 
     def first(self, element):
-        non_terminal = self.get_non_terminal()
+        non_terminal = list(set(prod.name for prod in self.productions))
         all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
 
-        values = []
-        if element not in non_terminal and element not in values:
-            values.append(element)
+        values = set()
+        if element not in non_terminal:
+            values.add(element)
 
         to_analyze = {p[1] for p in all_prods if len(p) > 1 and p[0] == element}
         done = set()
 
         while to_analyze:
             a = to_analyze.pop()
-            if a not in non_terminal and a not in values:
-                values.append(a)
+            if a not in non_terminal:
+                values.add(a)
             else:
                 done.add(a)
                 for p in all_prods:
@@ -416,7 +415,7 @@ class Parser:
     
 
     def all_first(self):
-        non_terminal = self.get_non_terminal()
+        non_terminal = list(set(prod.name for prod in self.productions))
         return {nt: self.first(nt) for nt in non_terminal}
     
 
