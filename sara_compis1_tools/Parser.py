@@ -355,9 +355,13 @@ class Parser:
                             no_dot.pop()                 
                             complete_prod = [h.name] + no_dot               
                             table[no][f] = f'r{all_prods.index(complete_prod) +1}'
+
+        # Assigning goto
+        for no, state in automata.items():
+            for transition, final_dest in state.transitions.items():
+                if transition in non_terminal:
+                    table[no][transition] = f'{final_dest}'
                                 
-
-
         return table
 
 
@@ -499,7 +503,7 @@ if __name__ == "__main__":
     parser.set_values()
     wut = parser.construct_automata()
     parser.construct_slr_table(wut)
-    # parser.draw_automata_p(wut)
+    parser.draw_automata_p(wut)
     # wut = parser.all_first()
     # wut2 = parser.all_follows()
     a = 1
