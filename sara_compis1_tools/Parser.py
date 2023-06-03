@@ -543,16 +543,17 @@ class Parser:
 
 
 if __name__ == "__main__":
-    parser = Parser("sara_compis1_tools/slr-rs.yalp")
+    parser = Parser("sara_compis1_tools/slr-2-ok.yalp")
     err = parser.analyze_yapar()
     parser.set_values()
     wut = parser.construct_automata()
     table = parser.construct_slr_table(wut)
-    ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
-    # parser.draw_automata_p(wut)
-    # wut = parser.all_first()
-    # wut2 = parser.all_follows()
-    a = 1
+    
+    with open('generated_p.py', 'w', encoding="utf-8") as file:
+        file.write('table = ' + str(table))
 
+
+    # ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
+    # a = 1
 
 
