@@ -363,6 +363,31 @@ class Parser:
                     table[no][transition] = f'{final_dest}'
                                 
         return table
+    
+
+    def eval_string(self, table, input_str):
+
+        stack = [0]
+        all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
+        
+        while True:
+            print(stack, input_str)
+            action = table[stack[-1]][input_str[0]]
+            if action[0] == 's':
+                stack.append(int(action[1:]))
+                input_str = input_str[1:]
+            elif action[0] == 'r':
+                prod = all_prods[int(action[1:]) - 1]
+                for _ in range(len(prod[1:])):
+                    stack.pop()
+                stack.append(table[stack[-1]][prod[0]])
+            elif action == 'acc':
+                return True
+            else:
+                stack.append(action)
+            if not input_str:
+                return False
+
 
 
                                      
@@ -502,8 +527,9 @@ if __name__ == "__main__":
     err = parser.analyze_yapar()
     parser.set_values()
     wut = parser.construct_automata()
-    parser.construct_slr_table(wut)
-    parser.draw_automata_p(wut)
+    table = parser.construct_slr_table(wut)
+    parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
+    # parser.draw_automata_p(wut)
     # wut = parser.all_first()
     # wut2 = parser.all_follows()
     a = 1
