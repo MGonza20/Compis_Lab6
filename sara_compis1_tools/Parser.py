@@ -331,11 +331,13 @@ class Parser:
                 
                 # Assigning accept
                 if transition == '$' and final_dest == 'aceptar':
-                    table[no]['$'] = 'acc'
+                    table[no]['$'] = ['acc']
 
                 # Assigning shift
                 elif transition not in non_terminal:
-                    table[no][transition] = f's{final_dest}'
+                    if not table[no].get(transition):
+                        table[no][transition] = []
+                    table[no][transition].append(f's{final_dest}')
 
         for no, state in automata.items():
             # Assigning reduce
@@ -353,14 +355,18 @@ class Parser:
                         for f in follow_res:
                             no_dot = h.production.copy()
                             no_dot.pop()                 
-                            complete_prod = [h.name] + no_dot               
-                            table[no][f] = f'r{all_prods.index(complete_prod) +1}'
+                            complete_prod = [h.name] + no_dot         
+                            if not table[no].get(f):
+                                table[no][f] = []      
+                            table[no][f].append(f'r{all_prods.index(complete_prod) +1}')
 
         # Assigning goto
         for no, state in automata.items():
             for transition, final_dest in state.transitions.items():
                 if transition in non_terminal:
-                    table[no][transition] = f'{final_dest}'
+                    if not table[no].get(transition):
+                        table[no][transition] = []
+                    table[no][transition].append(f'{final_dest}')
                                 
         return table
     
@@ -374,25 +380,33 @@ class Parser:
             print(stack, input_str)
             action = table[stack[-1]][input_str[0]]
 
-            # in case is a shift
-            if action[0] == 's':
-                stack.append(int(action[1:]))
-                input_str = input_str[1:]
-            
-            # in case is a reduce
-            elif action[0] == 'r':
-                prod = all_prods[int(action[1:]) - 1]
-                for _ in range(len(prod[1:])):
-                    stack.pop()
-                stack.append(int(table[stack[-1]][prod[0]]))
-            
-            # in case the input string is accepted
-            elif action == 'acc':
-                return True
+            if len(action) > 1:
+                if action[0][0] == 'r' and action[1][0] == 's' or action[0][0] == 's' and action[1][0] == 'r':
+                    raise Exception('Error: Reducion-Desplazamiento')
+                elif action[0][0] == 'r' and action[1][0] == 'r':
+                    raise Exception('Error: Reducion-Reduccion')
+
             else:
-                stack.append(action)
-            if not input_str:
-                return False
+                action = action[0]
+                # in case is a shift
+                if action[0] == 's':
+                    stack.append(int(action[1:]))
+                    input_str = input_str[1:]
+                
+                # in case is a reduce
+                elif action[0] == 'r':
+                    prod = all_prods[int(action[1:]) - 1]
+                    for _ in range(len(prod[1:])):
+                        stack.pop()
+                    stack.append(int(table[stack[-1]][prod[0]][0]))
+                
+                # in case the input string is accepted
+                elif action == 'acc':
+                    return True
+                else:
+                    stack.append(action)
+                if not input_str:
+                    return False
 
 
 
@@ -529,7 +543,7 @@ class Parser:
 
 
 if __name__ == "__main__":
-    parser = Parser("sara_compis1_tools/slr-2-ok.yalp")
+    parser = Parser("sara_compis1_tools/slr-rs.yalp")
     err = parser.analyze_yapar()
     parser.set_values()
     wut = parser.construct_automata()
