@@ -380,7 +380,7 @@ class Parser:
                 prod = all_prods[int(action[1:]) - 1]
                 for _ in range(len(prod[1:])):
                     stack.pop()
-                stack.append(table[stack[-1]][prod[0]])
+                stack.append(int(table[stack[-1]][prod[0]]))
             elif action == 'acc':
                 return True
             else:
@@ -528,7 +528,7 @@ if __name__ == "__main__":
     parser.set_values()
     wut = parser.construct_automata()
     table = parser.construct_slr_table(wut)
-    parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
+    ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
     # parser.draw_automata_p(wut)
     # wut = parser.all_first()
     # wut2 = parser.all_follows()
