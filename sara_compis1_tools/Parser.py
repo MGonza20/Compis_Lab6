@@ -373,14 +373,20 @@ class Parser:
         while True:
             print(stack, input_str)
             action = table[stack[-1]][input_str[0]]
+
+            # in case is a shift
             if action[0] == 's':
                 stack.append(int(action[1:]))
                 input_str = input_str[1:]
+            
+            # in case is a reduce
             elif action[0] == 'r':
                 prod = all_prods[int(action[1:]) - 1]
                 for _ in range(len(prod[1:])):
                     stack.pop()
                 stack.append(int(table[stack[-1]][prod[0]]))
+            
+            # in case the input string is accepted
             elif action == 'acc':
                 return True
             else:
