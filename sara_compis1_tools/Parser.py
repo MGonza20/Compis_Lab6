@@ -402,11 +402,11 @@ class Parser:
                 
                 # in case the input string is accepted
                 elif action == 'acc':
-                    return True
+                    return 'Cadena aceptada'
                 else:
                     stack.append(action)
                 if not input_str:
-                    return False
+                    return 'Cadena no aceptada'
 
 
 
@@ -551,6 +551,7 @@ if __name__ == "__main__":
     tokens = parser.tokens + parser.ignored_tokens
     
     with open('generated_p.py', 'w', encoding="utf-8") as file:
+        file.write('\nfrom Parser import Parser')
         file.write('\n\ntable = ' + str(table))
 
         file.write("\n\nclass Generated_parser:\n")
@@ -563,6 +564,12 @@ if __name__ == "__main__":
             else:
                 file.write(f"'{token}',")
         file.write("]\n\n")
+
+        file.write("\tdef analyze(self, yalp_file, input):\n")
+        file.write("\t\tparser = Parser(yalp_file)\n")
+
+        file.write("\t\tans = parser.eval_string(table, input)\n")
+
 
 
 

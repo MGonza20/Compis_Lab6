@@ -437,8 +437,8 @@ if __name__ == '__main__':
     with open('generated.py', 'w', encoding="utf-8") as file:
         file.write("from sara_compis1_tools.StateAFD import StateAFD\n")
         file.write("from sara_compis1_tools.lexEval import LexEval\n")
-        file.write("from sara_compis1_tools.Error import Error\n")
-        file.write("import sys\n\n")
+        file.write("from sara_compis1_tools.Error import Error\n\n")
+        
         file.write("mega = [")
         for i, obj in enumerate(mega_automata):
             if obj.value:
@@ -470,10 +470,8 @@ if __name__ == '__main__':
                 file.write(f"'{token}',")
         file.write("]\n\n")
 
-        file.write("\tdef parse(self):\n")
-        file.write("\t\tif len(sys.argv) < 2:\n\t\t\tprint('Por favor ingrese el archivo plano')\n\t\t\tsys.exit(1)\n")
-        file.write("\t\ttxt_file = sys.argv[1]\n\n")
-        file.write("\t\tlex = LexEval(txt_file)\n")
+        file.write("\tdef parse(self, yal_file):\n")
+        file.write("\t\tlex = LexEval(yal_file)\n")
 
         file.write("\t\tresults = lex.evaluate(mega, errors)\n")
         file.write("\t\tlex.print_tokens(results)\n\n")
