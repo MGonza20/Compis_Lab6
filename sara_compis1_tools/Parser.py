@@ -49,7 +49,7 @@ class Parser:
 
         for index, line in enumerate(lines, start=1):
             if line.count('/*') != line.count('*/'):
-                errors.append(('Error (Sintactico) en la linea ' + str(index) + ':\nError en comentario', index))
+                errors.append('Error (Sintactico) en la linea ' + str(index) + ':\nError en comentario', index)
 
         splits = [line.split(' ') for line in lines]
         splits = self.remove_spaces_list(splits)
@@ -58,7 +58,7 @@ class Parser:
         if separator:
             for i_line, line in enumerate(splits, start=1):
                 if line and line[0] == '%token' and i_line > separator[0]:
-                    errors.append(('Error (Sintactico) en la linea ' + str(i_line) + ':\nNo es valido declarar tokens luego del separador %%', i_line))
+                    errors.append('Error (Sintactico) en la linea ' + str(i_line) + ':\nNo es valido declarar tokens luego del separador %%')
 
         # self.set_values()
         non_terminals = self.get_non_terminal()
@@ -75,7 +75,7 @@ class Parser:
                         indx += 1
                         for element in list_:
                             if element not in non_terminals and element not in self.tokens and element not in ['|', 'ε']:
-                                errors.append(('Error (Sintactico) en la linea ' + str(indx) + ':\nEl token ' + element + ' no esta declarado', indx))
+                                errors.append('Error (Sintactico) en la linea ' + str(indx) + ':\nEl token ' + element + ' no esta declarado')
                 indx += 1
 
         return errors
@@ -391,33 +391,40 @@ class Parser:
         while True:
             print(f'Pila: {stack}')
             print(f"Entrada: {' '.join(input_str)}")
-            action = table[stack[-1]][input_str[0]]
-
-            
-            action = action[0]
-            # in case is a shift
-            if action[0] == 's':
-                stack.append(int(action[1:]))
-                input_str = input_str[1:]
-                print('Accion: Desplazar\n')                    
-                
-            # in case is a reduce
-            elif action[0] == 'r':
-                prod = all_prods[int(action[1:]) - 1]
-                print(f'Accion: Reducir mediante {prod[0]} → {" ".join(prod[1:])}\n')
-                for _ in range(len(prod[1:])):
-                    stack.pop()
-                stack.append(int(table[stack[-1]][prod[0]][0]))
-                
-            # in case the input string is accepted
-            elif action == 'acc':
-                print('Accion: Aceptar\n')
-                return True
-            else:
-                stack.append(action)
-            if not input_str:
-                print('Accion: Error: Cadena no aceptada\n')
+            aa = input_str[0]
+            bb = table[stack[-1]]
+            stck = stack[-1]
+            if input_str[0] not in table[stack[-1]]:
+                print('Accion: Error\n')
                 return False
+            else:
+                action = table[stack[-1]][input_str[0]]
+
+                
+                action = action[0]
+                # in case is a shift
+                if action[0] == 's':
+                    stack.append(int(action[1:]))
+                    input_str = input_str[1:]
+                    print('Accion: Desplazar\n')                    
+                    
+                # in case is a reduce
+                elif action[0] == 'r':
+                    prod = all_prods[int(action[1:]) - 1]
+                    print(f'Accion: Reducir mediante {prod[0]} → {" ".join(prod[1:])}\n')
+                    for _ in range(len(prod[1:])):
+                        stack.pop()
+                    stack.append(int(table[stack[-1]][prod[0]][0]))
+                    
+                # in case the input string is accepted
+                elif action == 'acc':
+                    print('Accion: Aceptar\n')
+                    return True
+                else:
+                    stack.append(action)
+                if not input_str:
+                    print('Accion: Error: Cadena no aceptada\n')
+                    return False
 
 
 
@@ -554,22 +561,47 @@ class Parser:
 
 
 if __name__ == "__main__":
-    parser = Parser("sara_compis1_tools/slr-fatal-err.yalp")
+    # parser = Parser("sara_compis1_tools/slr-2-ok.yalp")
+    parser = Parser("slr-2-ok.yalp")
     parser.set_values()
     err = parser.analyze_yapar()
     wut = parser.construct_automata()
     table = parser.construct_slr_table(wut)
     # errores = parser.eval_table(table)
-    a = 1
+    # ans = parser.eval_string(table, ['id', 'id', '*', '+', 'id', '$'])
+    # a = 1
 
-    toks = parser.tokens + parser.ignored_tokens
     
     with open('generated_p.py', 'w', encoding="utf-8") as file:
-        file.write('\ntable = ' + str(table))
+        file.write('\nfrom Parser import Parser\n')
+        file.write('import sys\n\n')
+        file.write('table = ' + str(table))
+        file.write('\n\n')
 
-        file.write('\n\nclass Gen_Parser:\n')
-        file.write('\n\tdef return_p_toks(self):')
-        file.write('\n\t\treturn ' + str(toks))
+        file.write('if len(sys.argv) < 2:\n')
+        file.write('\tprint("Por favor ingrese el archivo .yal")\n')
+        file.write('\tsys.exit(1)\n\n')
+        
+        file.write('parser = Parser(sys.argv[1])\n')
+        file.write('parser.set_values()\n\n')
+        
+        file.write('err = parser.analyze_yapar()\n')
+        file.write('if err:\n')
+        file.write('\tfor e in err:\n')
+        file.write('\t\tprint(e)\n')
+        file.write('else:\n')
+
+        file.write('\terrores = parser.eval_table(table)\n')
+        file.write('\tif errores:\n')
+        file.write('\t\tfor error in errores:\n')
+        file.write('\t\t\tprint(error)\n')
+        file.write('\telse:\n')
+        file.write("\t\tparser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])\n")
+        
+
+            # if len(sys.argv) < 2:
+    #     print("Por favor ingrese el archivo .yal")
+    #     sys.exit(1)
 
 
     # ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
