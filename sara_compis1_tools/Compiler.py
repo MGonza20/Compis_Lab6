@@ -26,6 +26,8 @@ if marker == 'err':
     content = sorted(content, key=lambda x: x[1])
     for err, indx in content:
         all_errors.append(err)
+elif marker == 'tk':
+    recognized_toks = content
 
 # errores del analizador sintactico
 errors = p.yalp_error()

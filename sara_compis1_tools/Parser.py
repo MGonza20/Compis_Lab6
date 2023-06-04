@@ -164,6 +164,7 @@ class Parser:
 
                     self.productions.append(prod)
                     indx += 1
+        aa = 1
 
     def return_tokens(self):
         self.set_values()
@@ -562,8 +563,8 @@ class Parser:
 
 if __name__ == "__main__":
     # parser = Parser("sara_compis1_tools/slr-2.yalp")
-    # yalp_file = "sara_compis1_tools/slr-2.yalp"
-    yalp_file = "slr-2.yalp"
+    yalp_file = "sara_compis1_tools/slr-2-ok.yalp"
+    # yalp_file = "slr-2-ok.yalp"
     parser = Parser(yalp_file)
     parser.set_values()
     err = parser.analyze_yapar()
