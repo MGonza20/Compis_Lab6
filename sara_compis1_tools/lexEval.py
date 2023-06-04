@@ -76,14 +76,14 @@ class LexEval:
     def get_recognized_tokens(self, result_sim):
         tokens, errors = result_sim
         if not errors:
-            return tokens
+            return ['tk', tokens]
         else:
             str_errors = []
             errors = self.sort_errors(errors)
             for error in errors:
                 if error.position:
-                    str_errors.append(f'Error (Lexico) en línea {error.line}: \n{error.error}, posición {error.position}\n')
+                    str_errors.append((f'Error (Lexico) en línea {error.line}: \n{error.error}, posición {error.position}\n', error.line))
                 else:   
-                    str_errors.append(f'Error (Lexico) en línea {error.line}: \n{error.error}\n')
-            return str_errors
+                    str_errors.append((f'Error (Lexico) en línea {error.line}: \n{error.error}\n', error.line))
+            return ['err', str_errors]
 

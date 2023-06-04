@@ -3,6 +3,7 @@ import sys
 
 from generated import Generated
 from Parser import Parser
+from lexEval import LexEval
 
 
 # if len(sys.argv) < 2:
@@ -11,29 +12,23 @@ from Parser import Parser
 # yal_file = sys.argv[1]
 
 
-all_errors = []
 
 g = Generated()  
-res_parse = g.parse('sara_compis1_tools/con1_1_test')
-
-
-tokens, errors = result_sim
-if not errors:
-    print('')
-    for token in tokens:
-        exec(token)
-    else:
-        print('\n')
-        errors = self.sort_errors(errors)
-        for error in errors:
-            if error.position:
-                print(f'Error en línea {error.line}: \n{error.error}, posición {error.position}\n')
-            else:   
-                print(f'Error en línea {error.line}: \n{error.error}\n')
-
 
 
 tokens_scanner = set(g.return_tokens())
+
+all_errors = []
+
+# obtencion de tokens reconocidos o errores del scanner
+res_parse = g.parse('sara_compis1_tools/con1_1_test')
+lex_eval = LexEval('sara_compis1_tools/con1_1_test')
+marker, content = lex_eval.get_recognized_tokens(res_parse)
+
+if marker == 'err':
+    for err in content:
+        all_errors.append(err)
+
 
 # p = Parser(yal_file)
 # tokens_parser = set(p.return_tokens())
@@ -52,17 +47,4 @@ if all_errors:
     for error_message in all_errors:
         print(f'{error_message}\n')
 else:    
-    auto = p.construct_automata()
-    p.draw_automata_p(auto)
-
-    firsts = p.all_first()
-    follows = p.all_follows()
-
-    print('\nResultados de funcion primero:')
-    for k, v in firsts.items():
-        print(f'Primero({k}) = {v}')
-
-    print('\nResultados de funcion siguiente:')
-    for k, v in follows.items():
-        print(f'Siguiente({k}) = {v}')
-    print()
+    pass
