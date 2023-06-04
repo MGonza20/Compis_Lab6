@@ -49,7 +49,7 @@ class Parser:
 
         for index, line in enumerate(lines, start=1):
             if line.count('/*') != line.count('*/'):
-                errors.append(('Error en la linea ' + str(index) + ':\nError en comentario', index))
+                errors.append(('Error (Sintactico) en la linea ' + str(index) + ':\nError en comentario', index))
 
         splits = [line.split(' ') for line in lines]
         splits = self.remove_spaces_list(splits)
@@ -58,7 +58,7 @@ class Parser:
         if separator:
             for i_line, line in enumerate(splits, start=1):
                 if line and line[0] == '%token' and i_line > separator[0]:
-                    errors.append(('Error en la linea ' + str(i_line) + ':\nNo es valido declarar tokens luego del separador %%', i_line))
+                    errors.append(('Error (Sintactico) en la linea ' + str(i_line) + ':\nNo es valido declarar tokens luego del separador %%', i_line))
 
         # self.set_values()
         non_terminals = self.get_non_terminal()
@@ -75,7 +75,7 @@ class Parser:
                         indx += 1
                         for element in list_:
                             if element not in non_terminals and element not in self.tokens and element not in ['|', 'ε']:
-                                errors.append(('Error en la linea ' + str(indx) + ':\nEl token ' + element + ' no esta declarado', indx))
+                                errors.append(('Error (Sintactico) en la linea ' + str(indx) + ':\nEl token ' + element + ' no esta declarado', indx))
                 indx += 1
 
         return errors
