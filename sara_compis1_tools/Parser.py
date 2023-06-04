@@ -544,13 +544,26 @@ class Parser:
 
 if __name__ == "__main__":
     parser = Parser("sara_compis1_tools/slr-2-ok.yalp")
-    err = parser.analyze_yapar()
     parser.set_values()
+    err = parser.analyze_yapar()
     wut = parser.construct_automata()
     table = parser.construct_slr_table(wut)
+    tokens = parser.tokens + parser.ignored_tokens
     
     with open('generated_p.py', 'w', encoding="utf-8") as file:
-        file.write('table = ' + str(table))
+        file.write('\n\ntable = ' + str(table))
+
+        file.write("\n\nclass Generated_parser:\n")
+        file.write("\tdef return_tokens(self):\n")
+        file.write("\t\treturn [")
+
+        for indx, token in enumerate(tokens):
+            if indx == len(tokens) - 1:
+                file.write(f"'{token}'")
+            else:
+                file.write(f"'{token}',")
+        file.write("]\n\n")
+
 
 
     # ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
