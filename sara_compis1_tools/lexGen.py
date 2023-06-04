@@ -470,10 +470,7 @@ if __name__ == '__main__':
                 file.write(f"'{token}',")
         file.write("]\n\n")
 
-        file.write("\tdef parse(self):\n")
-        file.write("\t\tif len(sys.argv) < 2:\n\t\t\tprint('Por favor ingrese el archivo plano')\n\t\t\tsys.exit(1)\n")
-        file.write("\t\ttxt_file = sys.argv[1]\n\n")
-        file.write("\t\tlex = LexEval(txt_file)\n")
+        file.write("\tdef parse(self, yal_file):\n")
+        file.write("\t\tlex = LexEval(yal_file)\n")
 
-        file.write("\t\tresults = lex.evaluate(mega, errors)\n")
-        file.write("\t\tlex.print_tokens(results)\n\n")
+        file.write("\t\treturn lex.evaluate(mega, errors)\n")

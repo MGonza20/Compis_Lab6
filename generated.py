@@ -10,13 +10,6 @@ class Generated:
 	def return_tokens(self):
 		return ['espacioEnBlanco','id','+','(',')','*']
 
-	def parse(self):
-		if len(sys.argv) < 2:
-			print('Por favor ingrese el archivo plano')
-			sys.exit(1)
-		txt_file = sys.argv[1]
-
-		lex = LexEval(txt_file)
-		results = lex.evaluate(mega, errors)
-		lex.print_tokens(results)
-
+	def parse(self, yal_file):
+		lex = LexEval(yal_file)
+		return lex.evaluate(mega, errors)
