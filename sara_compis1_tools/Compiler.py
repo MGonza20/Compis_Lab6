@@ -5,23 +5,42 @@ from generated import Generated
 from Parser import Parser
 
 
-if len(sys.argv) < 2:
-    print('Por favor ingrese el archivo plano')
-    sys.exit(1)
-yal_file = sys.argv[1]
+# if len(sys.argv) < 2:
+#     print('Por favor ingrese el archivo plano')
+#     sys.exit(1)
+# yal_file = sys.argv[1]
+
+
+all_errors = []
+
+g = Generated()  
+res_parse = g.parse('sara_compis1_tools/con1_1_test')
+
+
+tokens, errors = result_sim
+if not errors:
+    print('')
+    for token in tokens:
+        exec(token)
+    else:
+        print('\n')
+        errors = self.sort_errors(errors)
+        for error in errors:
+            if error.position:
+                print(f'Error en línea {error.line}: \n{error.error}, posición {error.position}\n')
+            else:   
+                print(f'Error en línea {error.line}: \n{error.error}\n')
 
 
 
-g = Generated()
 tokens_scanner = set(g.return_tokens())
 
-p = Parser(yal_file)
-tokens_parser = set(p.return_tokens())
+# p = Parser(yal_file)
+# tokens_parser = set(p.return_tokens())
 
 
 errors = p.analyze_yapar()
 errors = sorted(errors, key=lambda x: x[1])
-all_errors = []
 for error_message, indx in errors:
     all_errors.append(error_message)
 if set(tokens_scanner) != set(tokens_parser):

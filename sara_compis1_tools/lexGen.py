@@ -470,7 +470,7 @@ if __name__ == '__main__':
                 file.write(f"'{token}',")
         file.write("]\n\n")
 
-        file.write("\tdef parse(self, yal_file):\n")
-        file.write("\t\tlex = LexEval(yal_file)\n")
+        file.write("\tdef parse(self, test_file):\n")
+        file.write("\t\tlex = LexEval(test_file)\n")
 
         file.write("\t\treturn lex.evaluate(mega, errors)\n")
