@@ -377,7 +377,8 @@ class Parser:
         all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
         
         while True:
-            print(stack, input_str)
+            print(f'Pila: {stack}')
+            print(f"Entrada: {' '.join(input_str)}")
             action = table[stack[-1]][input_str[0]]
 
             if len(action) > 1:
@@ -392,20 +393,24 @@ class Parser:
                 if action[0] == 's':
                     stack.append(int(action[1:]))
                     input_str = input_str[1:]
+                    print('Accion: Desplazar\n')                    
                 
                 # in case is a reduce
                 elif action[0] == 'r':
                     prod = all_prods[int(action[1:]) - 1]
+                    print(f'Accion: Reducir mediante {prod[0]} → {" ".join(prod[1:])}\n')
                     for _ in range(len(prod[1:])):
                         stack.pop()
                     stack.append(int(table[stack[-1]][prod[0]][0]))
                 
                 # in case the input string is accepted
                 elif action == 'acc':
+                    print('Accion: Aceptar\n')
                     return True
                 else:
                     stack.append(action)
                 if not input_str:
+                    print('Accion: Error: Cadena no aceptada\n')
                     return False
 
 
@@ -553,7 +558,7 @@ if __name__ == "__main__":
     #     file.write('table = ' + str(table))
 
 
-    # ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
-    # a = 1
+    ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
+    a = 1
 
 
