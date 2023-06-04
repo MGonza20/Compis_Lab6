@@ -11,6 +11,4 @@ class Generated:
 
 	def parse(self, yal_file):
 		lex = LexEval(yal_file)
-		results = lex.evaluate(mega, errors)
-		lex.print_tokens(results)
-
+		return lex.evaluate(mega, errors)

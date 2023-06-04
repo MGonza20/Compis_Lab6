@@ -550,7 +550,7 @@ if __name__ == "__main__":
     table = parser.construct_slr_table(wut)
     tokens = parser.tokens + parser.ignored_tokens
     
-    with open('generated_p.py', 'w', encoding="utf-8") as file:
+    with open('sara_compis1_tools/generated_p.py', 'w', encoding="utf-8") as file:
         file.write('\nfrom Parser import Parser')
         file.write('\n\ntable = ' + str(table))
 

@@ -2,7 +2,7 @@
 import sys
 
 from generated import Generated
-from Parser import Parser
+from generated_p import Generated_parser
 
 
 if len(sys.argv) < 2:
@@ -15,7 +15,7 @@ yal_file = sys.argv[1]
 g = Generated()
 tokens_scanner = set(g.return_tokens())
 
-p = Parser(yal_file)
+p = Generated_parser(yal_file)
 tokens_parser = set(p.return_tokens())
 
 
@@ -33,17 +33,4 @@ if all_errors:
     for error_message in all_errors:
         print(f'{error_message}\n')
 else:    
-    auto = p.construct_automata()
-    p.draw_automata_p(auto)
-
-    firsts = p.all_first()
-    follows = p.all_follows()
-
-    print('\nResultados de funcion primero:')
-    for k, v in firsts.items():
-        print(f'Primero({k}) = {v}')
-
-    print('\nResultados de funcion siguiente:')
-    for k, v in follows.items():
-        print(f'Siguiente({k}) = {v}')
-    print()
+    pass

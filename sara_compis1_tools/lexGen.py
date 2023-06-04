@@ -473,5 +473,4 @@ if __name__ == '__main__':
         file.write("\tdef parse(self, yal_file):\n")
         file.write("\t\tlex = LexEval(yal_file)\n")
 
-        file.write("\t\tresults = lex.evaluate(mega, errors)\n")
-        file.write("\t\tlex.print_tokens(results)\n\n")
+        file.write("\t\treturn lex.evaluate(mega, errors)\n")
