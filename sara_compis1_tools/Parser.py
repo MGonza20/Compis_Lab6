@@ -562,12 +562,14 @@ class Parser:
 
 if __name__ == "__main__":
     # parser = Parser("sara_compis1_tools/slr-2.yalp")
-    yalp_file = "slr-2-ok.yalp"
+    # yalp_file = "sara_compis1_tools/slr-2.yalp"
+    yalp_file = "slr-2.yalp"
     parser = Parser(yalp_file)
     parser.set_values()
     err = parser.analyze_yapar()
     wut = parser.construct_automata()
     table = parser.construct_slr_table(wut)
+    tokens = parser.tokens + parser.ignored_tokens
     # errores = parser.eval_table(table)
     # ans = parser.eval_string(table, ['id', 'id', '*', '+', 'id', '$'])
     # a = 1
@@ -577,7 +579,6 @@ if __name__ == "__main__":
         file.write('\nfrom Parser import Parser\n')
         file.write('import sys\n\n')
         file.write('table = ' + str(table) + '\n')
-        file.write('error = ' + str(err) + '\n\n')
 
         # file.write('if len(sys.argv) < 2:\n')
         # file.write('\tprint("Por favor ingrese el archivo .yal")\n')
@@ -586,15 +587,19 @@ if __name__ == "__main__":
         file.write('parser = Parser("' + yalp_file + '")\n')
         file.write('parser.set_values()\n\n')
         
-        file.write('class GeneratedParser():\n')
+        file.write('class GeneratedParser:\n')
         file.write('\tdef yalp_error(self):\n')
-        file.write('\t\treturn error\n\n')
+        file.write('\t\treturn ' + str(err)+ '\n\n')
 
-        file.write('\tdef yalp_error(self):\n')
+        file.write('\tdef eval_table(self):\n')
         file.write('\t\treturn parser.eval_table(table)\n\n')
 
         file.write('\tdef eval_chain(table, chain):\n')
-        file.write("\t\tparser.eval_string(table, chain)\n")
+        file.write("\t\tparser.eval_string(table, chain)\n\n")
+
+        file.write('\tdef return_tokens(self):\n')
+        file.write('\t\treturn ' + str(tokens) + '\n\n')
+
         
 
             # if len(sys.argv) < 2:

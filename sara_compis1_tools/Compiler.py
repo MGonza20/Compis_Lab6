@@ -2,12 +2,16 @@
 import sys
 
 from generated import Generated
+from generated_p import GeneratedParser
 from Parser import Parser
 from lexEval import LexEval
 
 
-g = Generated()  
+g = Generated() 
 
+p = GeneratedParser()
+tokens_parser = p.return_tokens()
+tokens_parser = set(tokens_parser)
 
 tokens_scanner = set(g.return_tokens())
 
@@ -19,15 +23,13 @@ lex_eval = LexEval('sara_compis1_tools/con1_1_test')
 marker, content = lex_eval.get_recognized_tokens(res_parse)
 
 if marker == 'err':
-    for err in content:
+    content = sorted(content, key=lambda x: x[1])
+    for err, indx in content:
         all_errors.append(err)
 
 
-# p = Parser(yal_file)
-# tokens_parser = set(p.return_tokens())
 
-
-errors = p.analyze_yapar()
+errors = p.yalp_error()
 errors = sorted(errors, key=lambda x: x[1])
 for error_message, indx in errors:
     all_errors.append(error_message)
