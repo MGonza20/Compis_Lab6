@@ -425,8 +425,8 @@ if __name__ == '__main__':
     #     sys.exit(1)
 
     # yal_file = sys.argv[1]
-    # yal_file = "sara_compis1_tools/con1_1.yal"
-    yal_file = "con1_1.yal"
+    yal_file = "sara_compis1_tools/con1_1.yal"
+    # yal_file = "con1_1.yal"
     lexer = Lexer(yal_file)
     
     lexer.read()

@@ -549,8 +549,8 @@ if __name__ == "__main__":
     wut = parser.construct_automata()
     table = parser.construct_slr_table(wut)
     
-    with open('generated_p.py', 'w', encoding="utf-8") as file:
-        file.write('table = ' + str(table))
+    # with open('generated_p.py', 'w', encoding="utf-8") as file:
+    #     file.write('table = ' + str(table))
 
 
     # ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
