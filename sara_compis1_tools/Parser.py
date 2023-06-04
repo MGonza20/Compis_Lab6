@@ -562,7 +562,8 @@ class Parser:
 
 if __name__ == "__main__":
     # parser = Parser("sara_compis1_tools/slr-2.yalp")
-    parser = Parser("slr-2-ok.yalp")
+    yalp_file = "slr-2-ok.yalp"
+    parser = Parser(yalp_file)
     parser.set_values()
     err = parser.analyze_yapar()
     wut = parser.construct_automata()
@@ -575,28 +576,25 @@ if __name__ == "__main__":
     with open('generated_p.py', 'w', encoding="utf-8") as file:
         file.write('\nfrom Parser import Parser\n')
         file.write('import sys\n\n')
-        file.write('table = ' + str(table))
-        file.write('\n\n')
+        file.write('table = ' + str(table) + '\n')
+        file.write('error = ' + str(err) + '\n\n')
 
-        file.write('if len(sys.argv) < 2:\n')
-        file.write('\tprint("Por favor ingrese el archivo .yal")\n')
-        file.write('\tsys.exit(1)\n\n')
+        # file.write('if len(sys.argv) < 2:\n')
+        # file.write('\tprint("Por favor ingrese el archivo .yal")\n')
+        # file.write('\tsys.exit(1)\n\n')
         
-        file.write('parser = Parser(sys.argv[1])\n')
+        file.write('parser = Parser("' + yalp_file + '")\n')
         file.write('parser.set_values()\n\n')
         
-        file.write('err = ' + str(err) + '\n')
-        file.write('if err:\n')
-        file.write('\tfor e, indx in err:\n')
-        file.write('\t\tprint(e)\n')
-        file.write('else:\n')
+        file.write('class GeneratedParser():\n')
+        file.write('\tdef yalp_error(self):\n')
+        file.write('\t\treturn error\n\n')
 
-        file.write('\terrores = parser.eval_table(table)\n')
-        file.write('\tif errores:\n')
-        file.write('\t\tfor error in errores:\n')
-        file.write('\t\t\tprint(error)\n')
-        file.write('\telse:\n')
-        file.write("\t\tparser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])\n")
+        file.write('\tdef yalp_error(self):\n')
+        file.write('\t\treturn parser.eval_table(table)\n\n')
+
+        file.write('\tdef eval_chain(table, chain):\n')
+        file.write("\t\tparser.eval_string(table, chain)\n")
         
 
             # if len(sys.argv) < 2:
