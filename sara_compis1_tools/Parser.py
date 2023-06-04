@@ -371,6 +371,18 @@ class Parser:
         return table
     
 
+    def eval_table(self, table):
+        errors = []
+        for no, state in table.items():
+            for transition, final_dest in state.items():
+                if len(final_dest) > 1:
+                    if final_dest[0][0] == 'r' and final_dest[1][0] == 's' or final_dest[0][0] == 's' and final_dest[1][0] == 'r':
+                        errors.append(f'Error (Sintactico):\nReducion-Desplazamiento en estado {no} con transicion {transition}')
+                    elif final_dest[0][0] == 'r' and final_dest[1][0] == 'r':
+                        errors.append(f'Error (Sintactico):\nReducion-Reduccion en estado {no} con transicion {transition}')
+        return errors
+    
+
     def eval_string(self, table, input_str):
 
         stack = [0]
@@ -381,37 +393,31 @@ class Parser:
             print(f"Entrada: {' '.join(input_str)}")
             action = table[stack[-1]][input_str[0]]
 
-            if len(action) > 1:
-                if action[0][0] == 'r' and action[1][0] == 's' or action[0][0] == 's' and action[1][0] == 'r':
-                    raise Exception('Error: Reducion-Desplazamiento')
-                elif action[0][0] == 'r' and action[1][0] == 'r':
-                    raise Exception('Error: Reducion-Reduccion')
-
+            
+            action = action[0]
+            # in case is a shift
+            if action[0] == 's':
+                stack.append(int(action[1:]))
+                input_str = input_str[1:]
+                print('Accion: Desplazar\n')                    
+                
+            # in case is a reduce
+            elif action[0] == 'r':
+                prod = all_prods[int(action[1:]) - 1]
+                print(f'Accion: Reducir mediante {prod[0]} → {" ".join(prod[1:])}\n')
+                for _ in range(len(prod[1:])):
+                    stack.pop()
+                stack.append(int(table[stack[-1]][prod[0]][0]))
+                
+            # in case the input string is accepted
+            elif action == 'acc':
+                print('Accion: Aceptar\n')
+                return True
             else:
-                action = action[0]
-                # in case is a shift
-                if action[0] == 's':
-                    stack.append(int(action[1:]))
-                    input_str = input_str[1:]
-                    print('Accion: Desplazar\n')                    
-                
-                # in case is a reduce
-                elif action[0] == 'r':
-                    prod = all_prods[int(action[1:]) - 1]
-                    print(f'Accion: Reducir mediante {prod[0]} → {" ".join(prod[1:])}\n')
-                    for _ in range(len(prod[1:])):
-                        stack.pop()
-                    stack.append(int(table[stack[-1]][prod[0]][0]))
-                
-                # in case the input string is accepted
-                elif action == 'acc':
-                    print('Accion: Aceptar\n')
-                    return True
-                else:
-                    stack.append(action)
-                if not input_str:
-                    print('Accion: Error: Cadena no aceptada\n')
-                    return False
+                stack.append(action)
+            if not input_str:
+                print('Accion: Error: Cadena no aceptada\n')
+                return False
 
 
 
@@ -548,17 +554,19 @@ class Parser:
 
 
 if __name__ == "__main__":
-    parser = Parser("sara_compis1_tools/slr-2-ok.yalp")
-    err = parser.analyze_yapar()
+    parser = Parser("sara_compis1_tools/slr-rr.yalp")
     parser.set_values()
+    err = parser.analyze_yapar()
     wut = parser.construct_automata()
     table = parser.construct_slr_table(wut)
+    errores = parser.eval_table(table)
+    a = 1
     
     # with open('generated_p.py', 'w', encoding="utf-8") as file:
     #     file.write('table = ' + str(table))
 
 
-    ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
-    a = 1
+    # ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
+    # a = 1
 
 
