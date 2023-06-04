@@ -27,15 +27,15 @@ if marker == 'err':
     for err, indx in content:
         all_errors.append(err)
 
-
-
+# errores del analizador sintactico
 errors = p.yalp_error()
 errors = sorted(errors, key=lambda x: x[1])
 for error_message, indx in errors:
     all_errors.append(error_message)
+
+# Si los tokens no son iguales
 if set(tokens_scanner) != set(tokens_parser):
     all_errors.insert(0, 'Error:\nLos tokens no son iguales en el scanner y el parser')
-
 
 if all_errors:
     print()
