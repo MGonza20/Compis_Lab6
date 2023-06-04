@@ -6,13 +6,6 @@ from Parser import Parser
 from lexEval import LexEval
 
 
-# if len(sys.argv) < 2:
-#     print('Por favor ingrese el archivo plano')
-#     sys.exit(1)
-# yal_file = sys.argv[1]
-
-
-
 g = Generated()  
 
 

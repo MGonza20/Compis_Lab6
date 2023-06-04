@@ -559,11 +559,17 @@ if __name__ == "__main__":
     err = parser.analyze_yapar()
     wut = parser.construct_automata()
     table = parser.construct_slr_table(wut)
-    errores = parser.eval_table(table)
+    # errores = parser.eval_table(table)
     a = 1
+
+    toks = parser.tokens + parser.ignored_tokens
     
-    # with open('generated_p.py', 'w', encoding="utf-8") as file:
-    #     file.write('table = ' + str(table))
+    with open('generated_p.py', 'w', encoding="utf-8") as file:
+        file.write('\ntable = ' + str(table))
+
+        file.write('\n\nclass Gen_Parser:\n')
+        file.write('\n\tdef return_p_toks(self):')
+        file.write('\n\t\treturn ' + str(toks))
 
 
     # ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
