@@ -554,7 +554,7 @@ class Parser:
 
 
 if __name__ == "__main__":
-    parser = Parser("sara_compis1_tools/slr-rr.yalp")
+    parser = Parser("sara_compis1_tools/slr-fatal-err.yalp")
     parser.set_values()
     err = parser.analyze_yapar()
     wut = parser.construct_automata()
