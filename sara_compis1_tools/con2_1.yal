@@ -1,0 +1,25 @@
+
+(* Archivo 2 *)
+
+let printStatement = 'print'
+let delimitador = [' ''\t''\n']
+let espacioEnBlanco = delimitador+
+let letra = ['a'-'j''A'-'J']
+let digito = ['0'-'9']
+let id = (letra|'_')+(digito)+
+let comilla_doble = '"'
+let all_letters = ['a'-'z''A'-'Z']
+let cadena = comilla_doble(all_letters|digito|' ')+(comilla_doble)
+let enteros = digito+
+
+
+rule tokens =
+    printStatement				{ printStatement }
+  |  espacioEnBlanco				{ } (* Ignorar espacios en blanco *)
+  | id				{ id }
+  | cadena				{ cadena }
+  | enteros				{ enteros }
+  | '+'				{ + }
+  | '('				{ ( }
+  | ')'				{ ) }
+  | '*'				{ * }
