@@ -398,7 +398,7 @@ class Parser:
             bb = table[stack[-1]]
             stck = stack[-1]
             if input_str[0] not in table[stack[-1]]:
-                print('Accion: Error\n')
+                print('Accion: Error (Cadena no aceptada)\n')
                 return False
             else:
                 action = table[stack[-1]][input_str[0]]
