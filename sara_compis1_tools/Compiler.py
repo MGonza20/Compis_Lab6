@@ -47,7 +47,9 @@ if all_errors:
 else:    
     fatal_err = p.eval_table()
     if fatal_err:
+        print('\nErrores fatales en la tabla:\n')
         for ft_err in fatal_err:
             print(ft_err)
+            print()
     else:
         p.eval_chain(table, recognized_toks)

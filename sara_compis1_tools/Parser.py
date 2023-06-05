@@ -565,7 +565,7 @@ class Parser:
 if __name__ == "__main__":
     # parser = Parser("sara_compis1_tools/slr-2.yalp")
     # yalp_file = "sara_compis1_tools/slr-2-ok.yalp"
-    yalp_file = "sara_compis1_tools/slr-2-ok.yalp"
+    yalp_file = "sara_compis1_tools/slr-fatal-err.yalp"
     parser = Parser(yalp_file)
     parser.set_values()
     err = parser.analyze_yapar()
