@@ -386,6 +386,7 @@ class Parser:
 
     def eval_string(self, table, input_str):
 
+        input_str.append('$')
         stack = [0]
         all_prods = [[prod.name] + p for prod in self.productions for p in prod.production]
         
@@ -563,18 +564,14 @@ class Parser:
 
 if __name__ == "__main__":
     # parser = Parser("sara_compis1_tools/slr-2.yalp")
+    # yalp_file = "sara_compis1_tools/slr-2-ok.yalp"
     yalp_file = "sara_compis1_tools/slr-2-ok.yalp"
-    # yalp_file = "slr-2-ok.yalp"
     parser = Parser(yalp_file)
     parser.set_values()
     err = parser.analyze_yapar()
     wut = parser.construct_automata()
     table = parser.construct_slr_table(wut)
     tokens = parser.tokens + parser.ignored_tokens
-    # errores = parser.eval_table(table)
-    # ans = parser.eval_string(table, ['id', 'id', '*', '+', 'id', '$'])
-    # a = 1
-
     
     with open('generated_p.py', 'w', encoding="utf-8") as file:
         file.write('\nfrom Parser import Parser\n')
@@ -595,20 +592,13 @@ if __name__ == "__main__":
         file.write('\tdef eval_table(self):\n')
         file.write('\t\treturn parser.eval_table(table)\n\n')
 
-        file.write('\tdef eval_chain(table, chain):\n')
+        file.write('\tdef eval_chain(self, table, chain):\n')
         file.write("\t\tparser.eval_string(table, chain)\n\n")
 
         file.write('\tdef return_tokens(self):\n')
         file.write('\t\treturn ' + str(tokens) + '\n\n')
 
-        
-
-            # if len(sys.argv) < 2:
-    #     print("Por favor ingrese el archivo .yal")
-    #     sys.exit(1)
-
-
-    # ans = parser.eval_string(table, ['id', '*', 'id', '+', 'id', '$'])
-    # a = 1
+        file.write('\tdef return_table(self):\n')
+        file.write('\t\treturn table\n\n')
 
 

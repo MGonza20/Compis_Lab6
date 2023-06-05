@@ -12,6 +12,7 @@ g = Generated()
 p = GeneratedParser()
 tokens_parser = p.return_tokens()
 tokens_parser = set(tokens_parser)
+table = p.return_table()
 
 tokens_scanner = set(g.return_tokens())
 
@@ -44,4 +45,9 @@ if all_errors:
     for error_message in all_errors:
         print(f'{error_message}\n')
 else:    
-    pass
+    fatal_err = p.eval_table()
+    if fatal_err:
+        for ft_err in fatal_err:
+            print(ft_err)
+    else:
+        p.eval_chain(table, recognized_toks)
