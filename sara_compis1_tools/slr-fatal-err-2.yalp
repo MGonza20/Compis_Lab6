@@ -1,0 +1,48 @@
+/* Configuración del parser para gramática */
+
+/* Definición de tokens */
+%token id
+%token printStatement
+%token cadena
+%token enteros
+%token +
+%token (
+%token )
+%token *
+%token espacioEnBlanco
+IGNORE espacioEnBlanco
+
+%%
+
+
+/* Definición de la gramática */
+S:
+    S EP
+  | EP
+;
+
+EP:
+    E
+  | P
+  | F
+;
+
+E:
+    E + E
+  | T
+;
+
+T:
+    T * F
+  | F
+;
+
+F:
+    ( E )
+  | id
+;
+
+P:
+    printStatement ( cadena )
+  | printStatement ( enteros )
+;
