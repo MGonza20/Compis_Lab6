@@ -1,6 +1,7 @@
 
 import networkx as nx
 from graphviz import Digraph
+import sys 
 
 
 class ruleLine:
@@ -378,9 +379,9 @@ class Parser:
             for transition, final_dest in state.items():
                 if len(final_dest) > 1:
                     if final_dest[0][0] == 'r' and final_dest[1][0] == 's' or final_dest[0][0] == 's' and final_dest[1][0] == 'r':
-                        errors.append(f'Error (Sintactico):\nReducion-Desplazamiento en estado {no} con transicion {transition}')
+                        errors.append(f'Error (Sintactico):\nReducion-Desplazamiento en estado {no} con accion {transition}')
                     elif final_dest[0][0] == 'r' and final_dest[1][0] == 'r':
-                        errors.append(f'Error (Sintactico):\nReducion-Reduccion en estado {no} con transicion {transition}')
+                        errors.append(f'Error (Sintactico):\nReducion-Reduccion en estado {no} con accion {transition}')
         return errors
     
 
@@ -563,9 +564,13 @@ class Parser:
 
 
 if __name__ == "__main__":
-    # parser = Parser("sara_compis1_tools/slr-2.yalp")
-    # yalp_file = "sara_compis1_tools/slr-2-ok.yalp"
-    yalp_file = "sara_compis1_tools/slr-fatal-err.yalp"
+    
+    if len(sys.argv) < 2:
+        print("Por favor ingrese el archivo .yal")
+        sys.exit(1)
+
+    yalp_file = sys.argv[1]
+
     parser = Parser(yalp_file)
     parser.set_values()
     err = parser.analyze_yapar()
@@ -577,10 +582,6 @@ if __name__ == "__main__":
         file.write('\nfrom Parser import Parser\n')
         file.write('import sys\n\n')
         file.write('table = ' + str(table) + '\n')
-
-        # file.write('if len(sys.argv) < 2:\n')
-        # file.write('\tprint("Por favor ingrese el archivo .yal")\n')
-        # file.write('\tsys.exit(1)\n\n')
         
         file.write('parser = Parser("' + yalp_file + '")\n')
         file.write('parser.set_values()\n\n')

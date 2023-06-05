@@ -420,13 +420,11 @@ class Lexer:
     
 if __name__ == '__main__':
 
-    # if len(sys.argv) < 2:
-    #     print("Por favor ingrese el archivo .yal")
-    #     sys.exit(1)
+    if len(sys.argv) < 2:
+        print("Por favor ingrese el archivo .yal")
+        sys.exit(1)
 
-    # yal_file = sys.argv[1]
-    # yal_file = "sara_compis1_tools/con1_1.yal"
-    yal_file = "con1_1.yal"
+    yal_file = sys.argv[1]
     lexer = Lexer(yal_file)
     
     lexer.read()

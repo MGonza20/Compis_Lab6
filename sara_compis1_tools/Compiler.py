@@ -7,6 +7,11 @@ from Parser import Parser
 from lexEval import LexEval
 
 
+if len(sys.argv) < 2:
+    print('Error: No se ha especificado el archivo a compilar')
+    sys.exit()
+test_file = sys.argv[1]
+
 g = Generated() 
 
 p = GeneratedParser()
@@ -19,8 +24,8 @@ tokens_scanner = set(g.return_tokens())
 all_errors = []
 
 # obtencion de tokens reconocidos o errores del scanner
-res_parse = g.parse('sara_compis1_tools/con1_1_test')
-lex_eval = LexEval('sara_compis1_tools/con1_1_test')
+res_parse = g.parse(test_file)
+lex_eval = LexEval(test_file)
 marker, content = lex_eval.get_recognized_tokens(res_parse)
 
 if marker == 'err':
@@ -47,7 +52,7 @@ if all_errors:
 else:    
     fatal_err = p.eval_table()
     if fatal_err:
-        print('\nErrores fatales en la tabla:\n')
+        print('\nConflictos en la tabla:\n')
         for ft_err in fatal_err:
             print(ft_err)
             print()
